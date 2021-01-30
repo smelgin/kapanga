@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ACC_P01_Id__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>Id used for import sample data</description>
+    <externalId>true</externalId>
+    <label>ACC P01 Id</label>
+    <length>8</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>
