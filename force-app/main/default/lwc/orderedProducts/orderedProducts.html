@@ -2,24 +2,13 @@
     <div class="slds-page-header slds-page-header_related-list">
         <div class="slds-page-header__row">
             <div class="slds-page-header__col-title">
-                <lightning-breadcrumbs>
-                    <lightning-breadcrumb
-                        label="Orders"
-                        href="/lightning/o/Order/home">
-                    </lightning-breadcrumb>
-                    <lightning-breadcrumb
-                        label="Current Order"
-                        href="/lightning/r/Order/8011F000002WQntQAG/view">
-                    </lightning-breadcrumb>
-                </lightning-breadcrumbs>
-
                 <div class="slds-media">
                     <div class="slds-media__body">
                         <div class="slds-page-header__name">
                             <div class="slds-page-header__name-title">
                                 <h1>
                                     <span class="slds-page-header__title slds-truncate"
-                                        title="Order Name">Order {orderNumber}</span>
+                                        title="Order Name">Order Products</span>
                                 </h1>
                             </div>
                         </div>
@@ -75,7 +64,7 @@
                         columns={columns}
                         key-field="Id"
                         hide-checkbox-column="true"
-                        show-row-number-column
+                        resize-column-disabled="true"
                     >
                     </lightning-datatable> 
                     <template if:true={showSpinner}>

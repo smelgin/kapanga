@@ -52,6 +52,7 @@ export default class OrderedProducts extends LightningElement {
 
     get orderStatus(){
         let status = getFieldValue(this.order.data, STATUS_FIELD);
+        console.log(status);
         if (status == 'Activated') {
             this.isConfirmed = true;
         }
