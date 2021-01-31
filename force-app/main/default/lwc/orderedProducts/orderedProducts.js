@@ -6,11 +6,11 @@
  * @author: Ernesto S Melgin <esmelgin@gmail.com>
  */
 import { LightningElement, wire, track, api } from 'lwc';
+import { getRecord, getFieldValue, getRecordNotifyChange } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getOrderProducts from '@salesforce/apex/OrderableProductsController.getOrderProducts';
 import confirmOrder from '@salesforce/apex/OrderableProductsController.confirmOrder';
 import addProducts from '@salesforce/apex/OrderableProductsController.addOrderableProducts';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import ORDER_NUMBER_FIELD from '@salesforce/schema/Order.OrderNumber';
 import PRICEBOOK_ID_FIELD from '@salesforce/schema/Order.Pricebook2Id';
 import STATUS_FIELD from '@salesforce/schema/Order.Status';
@@ -22,7 +22,7 @@ const columns = [
     {label: 'Total Price', fieldName: 'TotalPrice', type: 'currency', typeAttributes: { currencyCode: 'EUR'}}
 ];
 
-const DEFAULT_ORDER_ID = '8011F000002WQntQAG'; // added temporarily
+const DEFAULT_ORDER_ID = '80117000000sa2aAAA'; 
 
 export default class OrderedProducts extends LightningElement {
     dataTable = [];
@@ -36,11 +36,11 @@ export default class OrderedProducts extends LightningElement {
         { label: '100', value: '100' },
     ];
     showSpinner = false;
-    orderId = DEFAULT_ORDER_ID;
+    @api recordId;
     openAddOrderableProductsDlg = false;
     isConfirmed = false;
 
-    @wire(getRecord, { recordId: DEFAULT_ORDER_ID, fields: [ORDER_NUMBER_FIELD, PRICEBOOK_ID_FIELD, STATUS_FIELD], optionalFields: [] }) order;
+    @wire(getRecord, { recordId: '$recordId', fields: [ORDER_NUMBER_FIELD, PRICEBOOK_ID_FIELD, STATUS_FIELD], optionalFields: [] }) order;
 
     get orderNumber() {
         return getFieldValue(this.order.data, ORDER_NUMBER_FIELD);
@@ -69,7 +69,7 @@ export default class OrderedProducts extends LightningElement {
     // Refresh items pages.
     handlePageChange () {
         this.showSpinner = true;
-        getOrderProducts ({ orderId: this.orderId, pageSize: parseInt(this.recordsPerPage)})
+        getOrderProducts ({ orderId: this.recordId, pageSize: parseInt(this.recordsPerPage)})
         .then (result => {
             this.dataTable = new Array();
             this.recordCount = result.length;
@@ -109,7 +109,7 @@ export default class OrderedProducts extends LightningElement {
         let productsSelected = JSON.parse(prodSelString);
         this.updateTable(productsSelected);
 
-        addProducts ({ pricebookItems: prodSelString, orderId: this.orderId })
+        addProducts ({ pricebookItems: prodSelString, orderId: this.recordId })
         .then (() => {
             console.log('finished 0');
             this.error = undefined;
@@ -159,9 +159,10 @@ export default class OrderedProducts extends LightningElement {
 
     handleConfirmOrder() {
         this.showSpinner = true;
-        confirmOrder ({ orderId: this.orderId })
+        confirmOrder ({ orderId: this.recordId })
         .then (() => {
             // TODO disable 'Add products' and 'Confirm'
+            getRecordNotifyChange([{recordId: this.recordId}]);            
             this.showSpinner = false;
             this.isConfirmed = true;
             console.log(this.orderStatus);

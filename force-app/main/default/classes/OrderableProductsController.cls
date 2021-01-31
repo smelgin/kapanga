@@ -67,11 +67,13 @@ public with sharing class OrderableProductsController {
     public static void confirmOrder(String orderId){
         try {
             Order currOrder = [
-                SELECT Id, Account.AccountNumber, OrderNumber, Type, Status, 
+                SELECT Id, Account.AccountNumber, OrderNumber, Type, Status, Contract.Status, 
                 (SELECT Id, Product2.Name, Product2.ProductCode, UnitPrice, Quantity FROM OrderItems) 
                 FROM Order WHERE Id = :orderId LIMIT 1
             ];
-
+            if(currOrder != null && currOrder.Contract.Status != 'Activated') {
+                throw new DmlException('The associated contract must be active.');
+            }
             // create the object based on results.
             Map<String, Object> ordToConfirm = new Map<String, Object>();
             List<Map<String,Object>> orderProducts = new List<Map<String,Object>>();

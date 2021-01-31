@@ -3,6 +3,7 @@
     <apiVersion>50.0</apiVersion>
     <isExposed>true</isExposed>
     <targets>
+        <target>lightning__RecordPage</target>
         <target>lightning__AppPage</target>
         <target>lightning__Tab</target>
     </targets>
@@ -12,5 +13,10 @@
                 <supportedFormFactor type="Large"/>
             </supportedFormFactors>
         </targetConfig>
+      <targetConfig targets="lightning__RecordPage">
+          <objects>
+              <object>Order</object>
+          </objects>
+      </targetConfig>        
     </targetConfigs>
 </LightningComponentBundle>

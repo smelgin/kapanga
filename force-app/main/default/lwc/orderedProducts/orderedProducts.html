@@ -69,7 +69,7 @@
                         <div></div>
                     </lightning-layout-item>
                 </lightning-layout>
-                <div class="slds-grid slds-gutters">
+                <div class="slds-grid slds-gutters" style="overflow: hidden">
                     <lightning-datatable
                         data={dataTable}
                         columns={columns}
@@ -90,6 +90,6 @@
 
     <!-- Filter Add Products screen -->
     <template if:true={openAddOrderableProductsDlg}>
-        <c-add-orderable-products onclose={handleDlgCloseAddProduct} onproducts={handleOnProductsAdded} order-id={orderId} pricebook-id={orderPricebookId}></c-add-orderable-products>
+        <c-add-orderable-products onclose={handleDlgCloseAddProduct} onproducts={handleOnProductsAdded} order-id={recordId} pricebook-id={orderPricebookId}></c-add-orderable-products>
     </template>    
 </template>
