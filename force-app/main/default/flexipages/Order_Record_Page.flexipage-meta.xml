@@ -118,11 +118,6 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>orderedProducts</componentName>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
                 <componentInstanceProperties>
                     <name>tabs</name>
                     <value>maintabs</value>
