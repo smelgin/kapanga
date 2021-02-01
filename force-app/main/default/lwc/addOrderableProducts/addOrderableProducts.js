@@ -91,7 +91,7 @@ export default class AddOrderableProducts extends LightningElement {
 
   // Do the search of products
   handleSearch() {
-    this.showSpinner = true;
+    this.showSpinner = true; 
     getProducts({
       searchKey: this.queryTerm,
       pricebookId: this.pricebookId,
