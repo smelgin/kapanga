@@ -40,13 +40,13 @@ sfdx force:data:bulk:upsert -s Product2 -f data/products.csv -i PRD_P01_Id__c
 
 3. Import Pricebook entries:
 This step will require a little more work ... 
- b. Open your scratch org and go to app KPN, and then to Pricebooks, and open "Standard Price Book".
- c. Look into the URL, it should be like this: `https://<your scratch org prefix>.lightning.force.com/lightning/r/Pricebook2/<pricebookId>/view`
- d. Copy the `<pricebookId>` and save or paste it in some other place for future references.
- e. Export as Csv, Product2 records, using Salesforce Data Loader (only Id and ProductCode, ordered by ProductCode).
- f. Open with some spreadsheets app (maybe Excel or LibreOffice), the file "pricebook_entries_standard.csv".
- g. Replace the id in the column "Pricebook2Id" by the one you pasted in step d (on each row).
- h. Replace each row in column 2, by the Id obtained in step e.
+ a. Open your scratch org and go to app KPN, and then to Pricebooks, and open "Standard Price Book".
+ b. Look into the URL, it should be like this: `https://<your scratch org prefix>.lightning.force.com/lightning/r/Pricebook2/<pricebookId>/view`
+ c. Copy the `<pricebookId>` and save or paste it in some other place for future references.
+ d. Export as Csv, Product2 records, using Salesforce Data Loader (only Id and ProductCode, ordered by ProductCode).
+ e. Open with some spreadsheets app (maybe Excel or LibreOffice), the file "pricebook_entries_standard.csv".
+ f. Replace the id in the column "Pricebook2Id" by the one you pasted in step d (on each row).
+ g. Replace each row in column 2, by the Id obtained in step e.
 
  4. Import "pricebook_entries_standard.csv" using DataLoader.
 
