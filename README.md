@@ -1,3 +1,4 @@
+![](https://img.shields.io/badge/coverage-82%25-green)
 # Salesforce Order Products Management
 
 ![orders-logo](onlineorderfulfillment_sml.png)
@@ -41,21 +42,21 @@ sfdx force:data:bulk:upsert -s Product2 -f data/products.csv -i PRD_P01_Id__c
 3. Import Pricebook entries:
 This step will require a little more work:
 
- 3.a. Open your scratch org and go to app KPN, and then to Pricebooks, and open "Standard Price Book".
+     *a.* Open your scratch org and go to app KPN, and then to Pricebooks, and open "Standard Price Book".
 
- 3.b. Look into the URL, it should be like this: `https://<your scratch org prefix>.lightning.force.com/lightning/r/Pricebook2/<pricebookId>/view`
+     *b.* Look into the URL, it should be like this: `https://<your scratch org prefix>.lightning.force.com/lightning/r/Pricebook2/<pricebookId>/view`
 
- 3.c. Copy the `<pricebookId>` and save or paste it in some other place for future references.
+     *c.* Copy the `<pricebookId>` and save or paste it in some other place for future references.
 
- 3.d. Export as Csv, Product2 records, using Salesforce Data Loader (only Id and ProductCode, ordered by ProductCode).
+     *d.* Export as Csv, Product2 records, using Salesforce Data Loader (only Id and ProductCode, ordered by ProductCode).
 
- 3.e. Open with some spreadsheets app (maybe Excel or LibreOffice), the file "pricebook_entries_standard.csv".
+     *e.* Open with some spreadsheets app (maybe Excel or LibreOffice), the file "pricebook_entries_standard.csv".
 
- 3.f. Replace the id in the column "Pricebook2Id" by the one you pasted in step d (on each row).
+     *f.* Replace the id in the column "Pricebook2Id" by the one you pasted in step d (on each row).
 
- 3.g. Replace each row in column 2, by the Id obtained in step e.
+     *g.* Replace each row in column 2, by the Id obtained in step e.
+
  
-
  4. Import "pricebook_entries_standard.csv" using DataLoader.
 
  5. Open the scratch org:
