@@ -1,13 +1,13 @@
-div.spinner { 
-    z-index: 100; 
-    background-color: white; 
-    min-height: 10em; 
-    min-width: 97%; 
-    float: left; 
-    position: absolute; 
-    top: 16em;
-    opacity: 0.4
+div.spinner {
+  z-index: 100;
+  background-color: white;
+  min-height: 10em;
+  min-width: 97%;
+  float: left;
+  position: absolute;
+  top: 16em;
+  opacity: 0.4;
 }
-.combobox { 
-    max-width: 7em;
+.combobox {
+  max-width: 7em;
 }
