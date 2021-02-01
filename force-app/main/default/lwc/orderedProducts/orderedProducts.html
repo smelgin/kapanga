@@ -1,5 +1,67 @@
 <template>
-    <div class="slds-page-header slds-page-header_related-list">
+    <div class="slds-page-header slds-page-header_record-home">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="standard:orders" alternative-text="Order view" title="Order view" size="medium">
+                        </lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span>Order</span>
+                                    <span class="slds-page-header__title" title={orderNumber}>{orderNumber}</span>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-page-header__row slds-page-header__row_gutters">
+            <div class="slds-page-header__col-details">
+                <lightning-record-view-form record-id={recordId} object-api-name="Order">                
+                    <ul class="slds-page-header__detail-row">
+                        <li class="slds-page-header__detail-block">
+                            <div class="slds-truncate">
+                                <lightning-output-field field-name="AccountId">
+                                </lightning-output-field>
+                            </div>
+                        </li>
+                        <li class="slds-page-header__detail-block">
+                            <div class="slds-truncate">
+                                <lightning-output-field field-name="ContractId">
+                                </lightning-output-field>
+                            </div>
+                        </li>
+                        <li class="slds-page-header__detail-block">
+                            <div class="slds-truncate">
+                                <lightning-output-field field-name="Type">
+                                </lightning-output-field>
+                            </div>
+                        </li>
+                        <li class="slds-page-header__detail-block">
+                            <div class="slds-truncate">
+                                <lightning-output-field field-name="Status">
+                                </lightning-output-field>
+                            </div>
+                        </li>
+                        <li class="slds-page-header__detail-block">
+                            <div class="slds-truncate">
+                                <lightning-output-field field-name="TotalAmount">
+                                </lightning-output-field>
+                            </div>
+                        </li>
+                    </ul>
+                </lightning-record-view-form>
+            </div>
+        </div>
+    </div>
+    <div>&nbsp;</div>
+ 
+    <div class="slds-page-header">
         <div class="slds-page-header__row">
             <div class="slds-page-header__col-title">
                 <div class="slds-media">
@@ -7,8 +69,7 @@
                         <div class="slds-page-header__name">
                             <div class="slds-page-header__name-title">
                                 <h1>
-                                    <span class="slds-page-header__title slds-truncate"
-                                        title="Order Name">Order Products</span>
+                                    <span class="slds-page-header__title slds-truncate" title="Order Name">Items  ({recordCount})</span>
                                 </h1>
                             </div>
                         </div>
@@ -29,36 +90,31 @@
                 </div>
             </div>
         </div>
-        <div class="slds-page-header__row">
-            <div class="slds-page-header__col-meta">
-                <p class="slds-page-header__meta-text"><small>Showing {recordCount} items</small></p>
+
+        <div class="slds-page-header__row slds-page-header__row_gutters">
+            <div class="slds-page-header__col-details">
+                <div class="slds-page-header__detail-row">
+                    <div style="display: none">
+                        {orderStatus}
+                    </div>
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_2-of-12"><span class="slds-form-element__label comboLabel">Size</span></div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-combobox class="combobox"
+                                name="pagSize"
+                                value={recordsPerPage} 
+                                options={comboboxOptions} 
+                                onchange={handlePageSize}>
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12"><span class="slds-form-element__label comboLabel">recs.</span></div>
+                    </div>                        
+                </div>
             </div>
         </div>
-        <div class="slds-page-header__row">
-            <div class="slds-page-header__col-meta"><span style="display: none">{orderStatus}</span></div>
-        </div>
-        <div class="slds-page-header__row slds-page-header__row_gutters" style="background-color: white;">
+        <div class="slds-page-header__row  slds-page-header__row_gutters">
             <div class="slds-page-header__col-details">
-                <lightning-layout>
-                    <lightning-layout-item flexibility="auto">
-                        <div class="slds-grid">
-                            <div class="slds-col slds-size_1-of-12"><span class="slds-form-element__label comboLabel">page size</span></div>
-                            <div class="slds-col slds-size_2-of-12">
-                                <lightning-combobox class="combobox"
-                                    name="pagSize"
-                                    value={recordsPerPage} 
-                                    options={comboboxOptions} 
-                                    onchange={handlePageSize}>
-                                </lightning-combobox>
-                            </div>
-                            <div class="slds-col slds-size_9-of-12"><span class="slds-form-element__label comboLabel">recs.</span></div>
-                        </div>                        
-                    </lightning-layout-item>
-                    <lightning-layout-item flexibility="auto" class="slds-has-bottom-magnet">
-                        <div></div>
-                    </lightning-layout-item>
-                </lightning-layout>
-                <div class="slds-grid slds-gutters" style="overflow: hidden">
+                <div class="slds-page-header__detail-row">
                     <lightning-datatable
                         data={dataTable}
                         columns={columns}
@@ -76,9 +132,8 @@
             </div>
         </div>
     </div>
-
     <!-- Filter Add Products screen -->
     <template if:true={openAddOrderableProductsDlg}>
         <c-add-orderable-products onclose={handleDlgCloseAddProduct} onproducts={handleOnProductsAdded} order-id={recordId} pricebook-id={orderPricebookId}></c-add-orderable-products>
-    </template>    
+    </template>
 </template>

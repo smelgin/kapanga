@@ -38,8 +38,8 @@ export default class OrderedProducts extends LightningElement {
     showSpinner = false;
     @api recordId;
     openAddOrderableProductsDlg = false;
-    isConfirmed = false;
-
+    @track isConfirmed = false;
+    
     @wire(getRecord, { recordId: '$recordId', fields: [ORDER_NUMBER_FIELD, PRICEBOOK_ID_FIELD, STATUS_FIELD], optionalFields: [] }) order;
 
     get orderNumber() {
@@ -113,6 +113,7 @@ export default class OrderedProducts extends LightningElement {
         addProducts ({ pricebookItems: prodSelString, orderId: this.recordId })
         .then (() => {
             console.log('finished 0');
+            getRecordNotifyChange([{recordId: this.recordId}]);            
             this.error = undefined;
             this.showSpinner = false;
             this.fireToaster('Success!', 'Products has been added to the order', 'success');
@@ -135,6 +136,11 @@ export default class OrderedProducts extends LightningElement {
                 if (dtWorkingCopy[i]['PricebookEntryId'] === tableItems[j]['Id']) {
                     let intVal = parseInt(dtWorkingCopy[i]['Quantity']) + 1;
                     dtWorkingCopy[i]['Quantity'] = intVal.toString();
+                    if(intVal > 1) {
+                        let listPrice = parseInt(dtWorkingCopy[i]['UnitPrice']);
+                        let totalPrice = intVal * listPrice;
+                        dtWorkingCopy[i]['TotalPrice'] = totalPrice.toString();
+                    }
                     tableItems[j]['_mark'] = true;
                     break;
                 }
@@ -162,7 +168,6 @@ export default class OrderedProducts extends LightningElement {
         this.showSpinner = true;
         confirmOrder ({ orderId: this.recordId })
         .then (() => {
-            // TODO disable 'Add products' and 'Confirm'
             getRecordNotifyChange([{recordId: this.recordId}]);            
             this.showSpinner = false;
             this.isConfirmed = true;
