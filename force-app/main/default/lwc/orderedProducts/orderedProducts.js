@@ -18,6 +18,7 @@ import addProducts from "@salesforce/apex/OrderableProductsController.addOrderab
 import ORDER_NUMBER_FIELD from "@salesforce/schema/Order.OrderNumber";
 import PRICEBOOK_ID_FIELD from "@salesforce/schema/Order.Pricebook2Id";
 import STATUS_FIELD from "@salesforce/schema/Order.Status";
+import CONTRACT_PB_ID_FIELD from "@salesforce/schema/Order.Contract.Pricebook2Id";
 
 const columns = [
   { label: "Product name", fieldName: "Name", type: "text" },
@@ -54,7 +55,7 @@ export default class OrderedProducts extends LightningElement {
 
   @wire(getRecord, {
     recordId: "$recordId",
-    fields: [ORDER_NUMBER_FIELD, PRICEBOOK_ID_FIELD, STATUS_FIELD],
+    fields: [ORDER_NUMBER_FIELD, PRICEBOOK_ID_FIELD, STATUS_FIELD, CONTRACT_PB_ID_FIELD],
     optionalFields: []
   })
   order;
@@ -64,10 +65,10 @@ export default class OrderedProducts extends LightningElement {
   }
 
   get orderPricebookId() {
-    let pricebook2Id = getFieldValue(this.order.data, PRICEBOOK_ID_FIELD);
-    //let pricebook2Id = getFieldValue(this.order.data, CONTRACT_PB_ID_FIELD);
+    //let pricebook2Id = getFieldValue(this.order.data, PRICEBOOK_ID_FIELD);
+    let pricebook2Id = getFieldValue(this.order.data, CONTRACT_PB_ID_FIELD);
     if (pricebook2Id === null) {
-      this.fireToaster('Warning', 'There is no pricebook selected in contract.', 'warning');
+      this.fireToaster('Warning', 'There is no pricebook selected in contract.', 'warning')
     }
     return pricebook2Id;
   }
@@ -75,6 +76,7 @@ export default class OrderedProducts extends LightningElement {
   get orderStatus() {
     let status = getFieldValue(this.order.data, STATUS_FIELD);
     console.log(status);
+    // eslint-disable-next-line eqeqeq
     if (status == "Activated") {
       this.isConfirmed = true;
     }
@@ -94,7 +96,7 @@ export default class OrderedProducts extends LightningElement {
     this.showSpinner = true;
     getOrderProducts({
       orderId: this.recordId,
-      pageSize: parseInt(this.recordsPerPage)
+      pageSize: parseInt(this.recordsPerPage, 10)
     })
       .then((result) => {
         this.dataTable = new Array();
@@ -102,12 +104,12 @@ export default class OrderedProducts extends LightningElement {
         // parse results to fit in the datatable
         for (let i = 0; i < result.length; i++) {
           let row = {
-            Id: result[i]["Id"],
-            PricebookEntryId: result[i]["PricebookEntryId"],
-            Name: result[i]["Product2"]["Name"],
-            UnitPrice: result[i]["UnitPrice"],
-            Quantity: result[i]["Quantity"],
-            TotalPrice: result[i]["TotalPrice"]
+            Id: result[i].Id,
+            PricebookEntryId: result[i].PricebookEntryId,
+            Name: result[i].Product2.Name,
+            UnitPrice: result[i].UnitPrice,
+            Quantity: result[i].Quantity,
+            TotalPrice: result[i].TotalPrice
           };
           this.dataTable = [...this.dataTable, row];
         }
@@ -158,40 +160,40 @@ export default class OrderedProducts extends LightningElement {
     // update existing ones ...
     let dtWorkingCopy = [...this.dataTable];
 
-    for (var i = 0; i < dtWorkingCopy.length; i++) {
-      for (var j = 0; j < tableItems.length; j++) {
-        if (dtWorkingCopy[i]["PricebookEntryId"] === tableItems[j]["Id"]) {
-          let intVal = parseInt(dtWorkingCopy[i]["Quantity"]) + 1;
-          dtWorkingCopy[i]["Quantity"] = intVal.toString();
+    for (let i = 0; i < dtWorkingCopy.length; i++) {
+      for (let j = 0; j < tableItems.length; j++) {
+        if (dtWorkingCopy[i].PricebookEntryId === tableItems[j].Id) {
+          let intVal = parseInt(dtWorkingCopy[i].Quantity, 10) + 1;
+          dtWorkingCopy[i].Quantity = intVal.toString();
           if (intVal > 1) {
-            let listPrice = parseInt(dtWorkingCopy[i]["UnitPrice"]);
+            let listPrice = parseInt(dtWorkingCopy[i].UnitPrice, 10);
             let totalPrice = intVal * listPrice;
-            dtWorkingCopy[i]["TotalPrice"] = totalPrice.toString();
+            dtWorkingCopy[i].TotalPrice = totalPrice.toString();
           }
-          tableItems[j]["_mark"] = true;
+          tableItems[j]._mark = true;
           break;
         }
       }
     }
     // Add new ones ...
     for (let i = 0; i < tableItems.length; i++) {
+      // eslint-disable-next-line no-prototype-builtins
       if (!tableItems[i].hasOwnProperty("_mark")) {
         dtWorkingCopy = [
           ...dtWorkingCopy,
           {
             Id: new Date().getUTCMilliseconds().toString(),
-            PricebookEntryId: tableItems[i]["Id"],
-            Name: tableItems[i]["Name"],
-            UnitPrice: tableItems[i]["UnitPrice"],
+            PricebookEntryId: tableItems[i].Id,
+            Name: tableItems[i].Name,
+            UnitPrice: tableItems[i].UnitPrice,
             Quantity: "1",
-            TotalPrice: tableItems[i]["UnitPrice"]
+            TotalPrice: tableItems[i].UnitPrice
           }
         ];
       }
     }
     this.dataTable = [...dtWorkingCopy];
     this.recordCount = this.dataTable.length;
-    return;
   }
 
   handleConfirmOrder() {
