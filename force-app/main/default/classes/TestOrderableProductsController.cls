@@ -1,6 +1,6 @@
 @isTest
 private class TestOrderableProductsController {
-    private static Id stdPricebookId;
+    private static Id stdPricebookId; 
 
     @TestSetup
     static void makeData(){
@@ -57,11 +57,6 @@ private class TestOrderableProductsController {
         Test.stopTest();
         Order orderWNewStat = [SELECT Id, Status FROM Order WHERE Id = :testOrder.Id];
         System.assertEquals('Activated', orderWNewStat.Status);
-
-    }
-
-    @isTest 
-    private static void testConfirmOrderNegative() {
 
     }
 
