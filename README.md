@@ -48,6 +48,13 @@ This step will require a little more work ...
  g. Replace the id in the column "Pricebook2Id" by the one you pasted in step d (on each row).
  h. Replace each row in column 2, by the Id obtained in step e.
 
+ 4. Import "pricebook_entries_standard.csv" using DataLoader.
+
+ 5. Open the scratch org:
+ ```
+ sfdx force:org:open --targetusername <your-scratch-org-username@example.com>
+ ```
+
  4. Manually create a Contract in the scratch org. Please activate the contract.
  
  5. Manually create an order in the scratch org. Once you created, you'll access the functionality.
