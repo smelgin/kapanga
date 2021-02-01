@@ -9,8 +9,6 @@
 import { LightningElement, track, api } from "lwc";
 import getProducts from "@salesforce/apex/OrderableProductsController.search";
 
-const DEFAULT_ORDER_ID = "8011F000002WQntQAG"; // added temporarily
-
 const columns = [
   { label: "Product name", fieldName: "Name", type: "text" },
   {
@@ -29,7 +27,6 @@ export default class AddOrderableProducts extends LightningElement {
   dataTable = [];
   selectedItems = {};
   columns = columns;
-  pricebookId;
   error;
   recordsPerPage = "20";
   comboboxOptions = [
@@ -39,7 +36,7 @@ export default class AddOrderableProducts extends LightningElement {
   ];
   queryTerm;
   @track showSpinner = false;
-  @api orderId = DEFAULT_ORDER_ID;
+  @api orderId;
   @api pricebookId;
 
   getSelectedName(event) {

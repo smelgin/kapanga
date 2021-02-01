@@ -36,8 +36,6 @@ const columns = [
   }
 ];
 
-const DEFAULT_ORDER_ID = "80117000000sa2aAAA";
-
 export default class OrderedProducts extends LightningElement {
   dataTable = [];
   columns = columns;
@@ -66,7 +64,12 @@ export default class OrderedProducts extends LightningElement {
   }
 
   get orderPricebookId() {
-    return getFieldValue(this.order.data, PRICEBOOK_ID_FIELD);
+    let pricebook2Id = getFieldValue(this.order.data, PRICEBOOK_ID_FIELD);
+    //let pricebook2Id = getFieldValue(this.order.data, CONTRACT_PB_ID_FIELD);
+    if (pricebook2Id === null) {
+      this.fireToaster('Warning', 'There is no pricebook selected in contract.', 'warning');
+    }
+    return pricebook2Id;
   }
 
   get orderStatus() {
