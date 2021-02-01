@@ -67,6 +67,7 @@ export default class AddOrderableProducts extends LightningElement {
     if (typeof this.selectedItems === "object" && this.selectedItems !== null) {
       // Add the selected products to the current order.
       let arrConverted = new Array();
+      // eslint-disable-next-line guard-for-in
       for (const prop in this.selectedItems) {
         arrConverted = [...arrConverted, this.selectedItems[prop]];
       }
@@ -94,7 +95,7 @@ export default class AddOrderableProducts extends LightningElement {
     getProducts({
       searchKey: this.queryTerm,
       pricebookId: this.pricebookId,
-      pageSize: parseInt(this.recordsPerPage)
+      pageSize: parseInt(this.recordsPerPage, 10)
     })
       .then((result) => {
         this.dataTable = new Array();
@@ -102,10 +103,10 @@ export default class AddOrderableProducts extends LightningElement {
         // parse results to fit in the datatable
         for (let i = 0; i < result.length; i++) {
           let row = {
-            Id: result[i]["Id"], // PricebookEntryId
-            Name: result[i]["Product2"]["Name"],
-            UnitPrice: result[i]["UnitPrice"],
-            Product2Id: result[i]["Product2Id"]
+            Id: result[i].Id, // PricebookEntryId
+            Name: result[i].Product2.Name,
+            UnitPrice: result[i].UnitPrice,
+            Product2Id: result[i].Product2Id
           };
           this.dataTable = [...this.dataTable, row];
         }
