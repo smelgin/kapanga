@@ -1,16 +1,59 @@
-# Salesforce DX Project: Next Steps
+# Salesforce Order Products Management
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+![orders-logo](onlineorderfulfillment_sml.png)
 
-## How Do You Plan to Deploy Your Changes?
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+1. Set up your environment. Follow the steps in the Quick Start: Lightning Web Components Trailhead project. The steps include:
 
-## Configure Your Salesforce DX Project
+   * Enable Dev Hub in your Trailhead Playground
+   * Install Salesforce CLI
+   * Install Visual Studio Code
+   * Install the Visual Studio Code Salesforce extensions, including the Lightning Web Components extension
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+2. If you haven't already done so, authorize your hub org and provide it with an alias (myhuborg in the command below):
+```
+sfdx auth:web:login -d -a myhuborg
+```
 
-## Read All About It
+3. Clone the kapanga repository
+```
+git clone https://github.com/smelgin/kapanga
+cd kapanga
+```
+4. Create a scratch org and provide it with an alias (kapanga in the command below):
+```
+sfdx force:org:create -s -f config/project-scratch-def.json -a kapanga
+```
+## Import sample data
+This is a little bit more complex task since there is no way to use the "tree" option in sfdx to import many-to-many relationships like the one between `Product2` and `Pricebook2`. So please, follow the next recipe to import data to your brand new scratch-org.
+
+1. Import Account and Contacts related:
+```
+sfdx force:data:tree:import --targetusername test-wvkpnfm5z113@example.com \
+ --plan data/export-demo-Account-Contact-plan.json
+```
+
+2. Import Products
+```
+sfdx force:data:bulk:upsert -s Product2 -f data/products.csv -i PRD_P01_Id__c
+```
+
+3. Import Pricebook entries:
+This step will require a little more work ... 
+ b. Open your scratch org and go to app KPN, and then to Pricebooks, and open "Standard Price Book".
+ c. Look into the URL, it should be like this: `https://<your scratch org prefix>.lightning.force.com/lightning/r/Pricebook2/<pricebookId>/view`
+ d. Copy the `<pricebookId>` and save or paste it in some other place for future references.
+ e. Export as Csv, Product2 records, using Salesforce Data Loader (only Id and ProductCode, ordered by ProductCode).
+ f. Open with some spreadsheets app (maybe Excel or LibreOffice), the file "pricebook_entries_standard.csv".
+ g. Replace the id in the column "Pricebook2Id" by the one you pasted in step d (on each row).
+ h. Replace each row in column 2, by the Id obtained in step e.
+
+ 4. Manually create a Contract in the scratch org. Please activate the contract.
+ 
+ 5. Manually create an order in the scratch org. Once you created, you'll access the functionality.
+ 
+
+## References
 
 - [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
 - [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
