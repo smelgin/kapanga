@@ -64,11 +64,21 @@ export default class OrderedProducts extends LightningElement {
     return getFieldValue(this.order.data, ORDER_NUMBER_FIELD);
   }
 
+  get orderContractPricebookId() {
+    return getFieldValue(this.order.data, CONTRACT_PB_ID_FIELD);
+  }
+
   get orderPricebookId() {
-    //let pricebook2Id = getFieldValue(this.order.data, PRICEBOOK_ID_FIELD);
-    let pricebook2Id = getFieldValue(this.order.data, CONTRACT_PB_ID_FIELD);
+    return getFieldValue(this.order.data, PRICEBOOK_ID_FIELD);
+  }
+
+  get orderFixPricebookId() {
+    let pricebook2Id = this.orderPricebookId;
     if (pricebook2Id === null) {
-      this.fireToaster('Warning', 'There is no pricebook selected in contract.', 'warning')
+      pricebook2Id = this.orderContractPricebookId;
+      if (pricebook2Id === null) {
+        this.fireToaster('Warning', 'There is no pricebook selected in order nor contract.', 'warning')
+      }
     }
     return pricebook2Id;
   }
@@ -136,11 +146,11 @@ export default class OrderedProducts extends LightningElement {
     let productsSelected = JSON.parse(prodSelString);
     this.updateTable(productsSelected);
 
-    addProducts({ pricebookItems: prodSelString, orderId: this.recordId })
+    addProducts({ pricebookItems: prodSelString, orderId: this.recordId, pricebookId: this.orderPricebookId, contractPricebookId: this.orderContractPricebookId })
       .then(() => {
         console.log("finished 0");
         getRecordNotifyChange([{ recordId: this.recordId }]);
-        this.error = undefined;
+        this.error = undefined; 
         this.showSpinner = false;
         this.fireToaster(
           "Success!",

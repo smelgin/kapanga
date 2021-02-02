@@ -108,7 +108,9 @@ private class TestOrderableProductsController {
     String pricebookItems = JSON.serialize(prodOrderLst);
     OrderableProductsController.addOrderableProducts(
       pricebookItems,
-      testOrder.Id
+      testOrder.Id,
+      stdPricebookId,
+      stdPricebookId 
     );
     Integer orderedItems = [
       SELECT COUNT()

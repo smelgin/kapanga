@@ -29,7 +29,9 @@ public with sharing class OrderableProductsController {
   @AuraEnabled
   public static void addOrderableProducts(
     String pricebookItems,
-    String orderId
+    String orderId,
+    String pricebookId,
+    String contractPricebookId
   ) {
     List<OrderProduct> itemsList = (List<OrderProduct>) JSON.deserialize(
       pricebookItems,
@@ -65,6 +67,12 @@ public with sharing class OrderableProductsController {
       }
     }
     try {
+      if (pricebookId == null || pricebookId == '') {
+        Order currOrder = new Order();
+        currOrder.Id = orderId;
+        currOrder.Pricebook2Id = contractPricebookId;
+        update currOrder;
+      }
       upsert orderItemsToSave;
     } catch (DmlException e) {
       String errorText = e.getMessage();
