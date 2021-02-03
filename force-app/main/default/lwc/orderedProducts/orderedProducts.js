@@ -1,7 +1,6 @@
 /**
- * addOrderableProducts
- * Object: Add orderable products to the current order.
- * Events fired:
+ * orderedProducts
+ * Object: Shows some order fields and products in the order.c/orderedProducts
  *
  * @author: Ernesto S Melgin <esmelgin@gmail.com>
  */
@@ -15,6 +14,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getOrderProducts from "@salesforce/apex/OrderableProductsController.getOrderProducts";
 import confirmOrder from "@salesforce/apex/OrderableProductsController.confirmOrder";
 import addProducts from "@salesforce/apex/OrderableProductsController.addOrderableProducts";
+
 import ORDER_NUMBER_FIELD from "@salesforce/schema/Order.OrderNumber";
 import PRICEBOOK_ID_FIELD from "@salesforce/schema/Order.Pricebook2Id";
 import STATUS_FIELD from "@salesforce/schema/Order.Status";
@@ -109,6 +109,7 @@ export default class OrderedProducts extends LightningElement {
       pageSize: parseInt(this.recordsPerPage, 10)
     })
       .then((result) => {
+        console.log(JSON.stringify(result));
         this.dataTable = new Array();
         this.recordCount = result.length;
         // parse results to fit in the datatable
@@ -142,8 +143,10 @@ export default class OrderedProducts extends LightningElement {
   handleOnProductsAdded(event) {
     this.showSpinner = true;
     let prodSelString = event.detail;
-    console.log(prodSelString);
     let productsSelected = JSON.parse(prodSelString);
+    if(productsSelected.length === 0) {
+      return;
+    }
     this.updateTable(productsSelected);
 
     addProducts({ pricebookItems: prodSelString, orderId: this.recordId, pricebookId: this.orderPricebookId, contractPricebookId: this.orderContractPricebookId })

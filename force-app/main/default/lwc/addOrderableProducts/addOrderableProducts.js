@@ -7,7 +7,7 @@
  * @author: Ernesto S Melgin <esmelgin@gmail.com>
  */
 import { LightningElement, track, api } from "lwc";
-import getProducts from "@salesforce/apex/OrderableProductsController.search";
+import search from "@salesforce/apex/OrderableProductsController.search";
 
 const columns = [
   { label: "Product name", fieldName: "Name", type: "text" },
@@ -27,7 +27,7 @@ export default class AddOrderableProducts extends LightningElement {
   dataTable = [];
   selectedItems = {};
   columns = columns;
-  error;
+  @track error;
   recordsPerPage = "20";
   comboboxOptions = [
     { label: "20", value: "20" },
@@ -55,12 +55,17 @@ export default class AddOrderableProducts extends LightningElement {
     }
   }
 
-  handleKeyUp(evt) {
+  handleKeyPress(evt) {
     const isEnterKey = evt.keyCode === 13;
     if (isEnterKey) {
       this.queryTerm = evt.target.value;
       this.handleSearch();
     }
+  }
+  
+  handleSearchClick() {
+    this.queryTerm = this.template.querySelector(".enter-search").value;
+    this.handleSearch();
   }
 
   handleAddProducts() {
@@ -92,12 +97,9 @@ export default class AddOrderableProducts extends LightningElement {
   // Do the search of products
   handleSearch() {
     this.showSpinner = true; 
-    getProducts({
-      searchKey: this.queryTerm,
-      pricebookId: this.pricebookId,
-      pageSize: parseInt(this.recordsPerPage, 10)
-    })
-      .then((result) => {
+    let recsPerPage = parseInt(this.recordsPerPage, 10);
+    search({ searchKey: this.queryTerm, pricebookId: this.pricebookId,  pageSize: recsPerPage })
+    .then( (result) => {
         this.dataTable = new Array();
         this.selectedItems = {};
         // parse results to fit in the datatable
@@ -110,15 +112,14 @@ export default class AddOrderableProducts extends LightningElement {
           };
           this.dataTable = [...this.dataTable, row];
         }
-        this.error = undefined;
+        this.error = false;
         this.showSpinner = false;
       })
-      .catch((error) => {
+      .catch( (error) => {
         this.showSpinner = false;
         this.dataTable = new Array();
         this.selectedItems = {};
-        this.error = error;
-        console.log(error);
+        this.error = error.body.message;
       });
   }
 

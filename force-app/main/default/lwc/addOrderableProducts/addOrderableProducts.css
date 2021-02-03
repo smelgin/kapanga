@@ -11,3 +11,8 @@ div.spinner {
 .combobox {
   max-width: 7em;
 }
+.error {
+  border: 1px solid brown;
+  background-color: lightpink;
+  color: brown;
+}
